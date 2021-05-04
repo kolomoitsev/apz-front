@@ -2,6 +2,8 @@ import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from '../components/Title.component';
+import { Trans, useTranslation } from "react-i18next";
+
 
 export default function Chart({ tasks }) {
     const theme = useTheme();
@@ -49,7 +51,7 @@ export default function Chart({ tasks }) {
                             position="left"
                             style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
                         >
-                            Tasks amount per day
+                                Tasks amount per day
                         </Label>
                     </YAxis>
                     <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />

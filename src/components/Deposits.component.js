@@ -3,6 +3,7 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from '../components/Title.component';
+import { Trans, useTranslation } from "react-i18next";
 
 const useStyles = makeStyles({
     depositContext: {
@@ -14,21 +15,17 @@ export default function Deposits({ tasksTotal, timeTotal }) {
     const classes = useStyles();
     return (
         <React.Fragment>
-            <Title>Tasks total given: </Title>
+            <Title>{ <Trans i18nKey={"alltasks"}>Tasks total given:</Trans> } </Title>
             <Typography component="p" variant="h4">
-                {tasksTotal} tasks
+                {tasksTotal}
+                { <Trans i18nKey={"tasks"}>tasks</Trans> }
             </Typography>
             <Typography component="p" variant="h4">
                 for {timeTotal} minutes
             </Typography>
             <Typography color="textSecondary" className={classes.depositContext}>
-                 in last 30 days
+                { <Trans i18nKey={"days"}>in last 30 days</Trans> }
             </Typography>
-            <div>
-                <Link color="primary" href="/stats">
-                    View more stats...
-                </Link>
-            </div>
         </React.Fragment>
     );
 }

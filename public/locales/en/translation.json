@@ -1,0 +1,10 @@
+{
+  "title": "DASHBOARD",
+  "tasks": "tasks",
+  "alltasks": "Tasks total given:",
+  "days": "in last 30 days",
+  "workers": "Point workers",
+  "addWorker": "Add new worker",
+  "editUser": "Edit user",
+  "removeUser": "Remove user"
+}

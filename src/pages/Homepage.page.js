@@ -26,13 +26,16 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 import axios from 'axios'
 import {endpoint} from '../config'
+import {UserPage, TaskPage, AnimalPage, SettingsPage} from './index'
+import Button from "@material-ui/core/Button";
+import { Trans, useTranslation } from "react-i18next";
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
+            <Link color="inherit" href="https://fivewalls.com.ua/">
+                pavlo kolomoitsev
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -122,6 +125,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HomePage = () => {
+
+
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (language) => {
+        i18n.changeLanguage(language);
+    };
+
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -140,13 +151,23 @@ const HomePage = () => {
     useEffect(() => {
         const _id = localStorage.getItem('id')
 
+        axios.get(`${endpoint}/user/${_id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+            .then(res => localStorage.setItem("reservationId", res.data.reservationId)
+            )
+            .catch(e => console.log(e.message))
+
+
         axios.get(`${endpoint}/task/created/${_id}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             }
         })
             .then(res => setTasks(res.data))
-            .catch(e => console.log(e))
+            .catch(e => console.log(e.message))
 
         axios.get(`${endpoint}/task/stats/admin/${_id}`, {
             headers: {
@@ -157,7 +178,7 @@ const HomePage = () => {
                 setTasksTotal(res.data.tasksTotal);
                 setTimeTotal(res.data.timeTotal);
             })
-            .catch(e => console.log(e))
+            .catch(e => console.log(e.message))
 
     }, [])
 
@@ -176,8 +197,23 @@ const HomePage = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
+                        <Trans i18nKey="title">
+                            Dashboard
+                        </Trans>
                     </Typography>
+
+                    <IconButton color="inherit">
+                        <Button variant="contained" color="primary" onClick={() => changeLanguage("en")}>
+                            Eng
+                        </Button>
+                    </IconButton>
+
+                    <IconButton color="inherit">
+                        <Button variant="contained" color="secondary" onClick={() => changeLanguage("ukr")}>
+                            UKR
+                        </Button>
+                    </IconButton>
+
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="secondary">
                             <NotificationsIcon />
@@ -206,8 +242,17 @@ const HomePage = () => {
                 <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
                         <Router>
+                            <Route path={'/settings'}>
+                                <SettingsPage />
+                            </Route>
+                            <Route path={'/animals'}>
+                                <AnimalPage />
+                            </Route>
+                            <Route path={'/tasks'}>
+                                <TaskPage />
+                            </Route>
                             <Route path={'/users'}>
-                                users
+                                <UserPage />
                             </Route>
                             <Route exact path={'/'}>
                                 {/* Chart */}
@@ -219,7 +264,7 @@ const HomePage = () => {
                                 {/* Recent Deposits */}
                                 <Grid item xs={12} md={4} lg={3}>
                                     <Paper className={fixedHeightPaper}>
-                                        { ( timeTotal &&  tasksTotal )  && <Deposits tasksTotal={tasksTotal} timeTotal={timeTotal} /> }
+                                        { ( timeTotal &&  tasksTotal )  ?  <Deposits tasksTotal={tasksTotal} timeTotal={timeTotal} /> : <h2>No recent activity</h2> }
                                     </Paper>
                                 </Grid>
                                 {/* Recent Orders */}
